@@ -63,7 +63,7 @@ brews:
     homepage: "https://github.com/serithemage/updoc"
     description: "CLI tool for Upstage Document Parse API"
     license: "MIT"
-    skip_upload: auto
+    skip_upload: true
     test: |
       system "#{bin}/updoc", "version"
 
