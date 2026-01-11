@@ -1,7 +1,7 @@
-# Binaries
-updoc
-updoc.exe
-updoc-e2e-test
+# Binaries (in root or bin directory)
+/updoc
+/updoc.exe
+/updoc-e2e-test
 *.exe
 *.exe~
 *.dll
