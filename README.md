@@ -18,31 +18,13 @@
 
 ## 설치
 
-### 바이너리 다운로드
-
-[Releases](https://github.com/serithemage/updoc/releases) 페이지에서 OS에 맞는 파일을 다운로드하세요.
-
-| OS | 아키텍처 | 파일 |
-|----|----------|------|
-| macOS | Apple Silicon | `updoc_*_darwin_arm64.tar.gz` |
-| macOS | Intel | `updoc_*_darwin_amd64.tar.gz` |
-| Linux | x86_64 | `updoc_*_linux_amd64.tar.gz` |
-| Linux | ARM64 | `updoc_*_linux_arm64.tar.gz` |
-| Windows | x86_64 | `updoc_*_windows_amd64.zip` |
+Go 1.21 이상이 필요합니다.
 
 ```bash
-# 예: macOS Apple Silicon
-tar -xzf updoc_*_darwin_arm64.tar.gz
-sudo mv updoc /usr/local/bin/
+go install github.com/serithemage/updoc/cmd/updoc@latest
 ```
 
-### Go로 설치
-
-```bash
-go install github.com/serithemage/updoc@latest
-```
-
-### 소스에서 빌드
+또는 소스에서 빌드:
 
 ```bash
 git clone https://github.com/serithemage/updoc.git
