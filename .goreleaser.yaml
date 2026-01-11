@@ -9,7 +9,7 @@ before:
 
 builds:
   - id: updoc
-    main: ./cmd/updoc
+    main: ./cmd/updoc/main.go
     binary: updoc
     env:
       - CGO_ENABLED=0
