@@ -1,4 +1,4 @@
-.PHONY: build build-all test test-coverage lint fmt vet clean install setup-hooks
+.PHONY: build build-all test test-e2e test-all test-coverage lint fmt vet clean install setup-hooks
 
 # Build variables
 BINARY_NAME=updoc
@@ -22,10 +22,19 @@ build-all:
 	GOOS=linux GOARCH=arm64 go build $(LDFLAGS) -o dist/$(BINARY_NAME)-linux-arm64 ./cmd/updoc
 	GOOS=windows GOARCH=amd64 go build $(LDFLAGS) -o dist/$(BINARY_NAME)-windows-amd64.exe ./cmd/updoc
 
-# Run tests
+# Run unit tests
 test:
-	@echo "==> Running tests..."
+	@echo "==> Running unit tests..."
 	go test -v -race ./...
+
+# Run E2E tests (requires UPSTAGE_API_KEY for API tests)
+test-e2e:
+	@echo "==> Running E2E tests..."
+	go test -tags=e2e -v ./test/e2e/... -timeout 5m
+
+# Run all tests (unit + E2E)
+test-all: test test-e2e
+	@echo "==> All tests passed!"
 
 # Run tests with coverage
 test-coverage:

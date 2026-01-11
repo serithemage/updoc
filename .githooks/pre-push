@@ -1,0 +1,35 @@
+#!/bin/bash
+# Pre-push hook: Run E2E tests before pushing
+# Go's test cache automatically skips unchanged tests
+
+set -e
+
+echo "==> Running pre-push hooks..."
+
+# Colors
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m'
+
+# Run unit tests first (cached by go test)
+echo "==> Running unit tests..."
+if ! go test ./internal/... ./cmd/...; then
+    echo -e "${RED}✗ Unit tests failed${NC}"
+    exit 1
+fi
+echo -e "${GREEN}✓ Unit tests passed${NC}"
+
+# Run E2E tests (cached by go test)
+echo "==> Running E2E tests..."
+if [ -z "$UPSTAGE_API_KEY" ]; then
+    echo -e "${YELLOW}⚠ UPSTAGE_API_KEY not set, running offline E2E tests only${NC}"
+fi
+
+if ! go test -tags=e2e ./test/e2e/... -timeout 5m; then
+    echo -e "${RED}✗ E2E tests failed${NC}"
+    exit 1
+fi
+echo -e "${GREEN}✓ E2E tests passed${NC}"
+
+echo -e "${GREEN}==> All pre-push checks passed!${NC}"

@@ -1,11 +1,15 @@
 # Binaries
 updoc
 updoc.exe
+updoc-e2e-test
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
+
+# Cache
+/.cache/
 
 # Build output
 /dist/
