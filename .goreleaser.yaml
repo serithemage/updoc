@@ -1,0 +1,88 @@
+version: 2
+
+project_name: updoc
+
+before:
+  hooks:
+    - go mod tidy
+    - go generate ./...
+
+builds:
+  - id: updoc
+    main: ./cmd/updoc
+    binary: updoc
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X github.com/serithemage/updoc/internal/cmd.Version={{.Version}}
+      - -X github.com/serithemage/updoc/internal/cmd.Commit={{.Commit}}
+      - -X github.com/serithemage/updoc/internal/cmd.Date={{.Date}}
+
+archives:
+  - id: default
+    format: tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - README.md
+      - LICENSE*
+      - docs/*
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^chore:'
+      - Merge pull request
+      - Merge branch
+
+brews:
+  - repository:
+      owner: serithemage
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    directory: Formula
+    homepage: "https://github.com/serithemage/updoc"
+    description: "CLI tool for Upstage Document Parse API"
+    license: "MIT"
+    skip_upload: auto
+    test: |
+      system "#{bin}/updoc", "version"
+
+nfpms:
+  - id: updoc
+    package_name: updoc
+    vendor: serithemage
+    homepage: "https://github.com/serithemage/updoc"
+    maintainer: "serithemage <your-email@example.com>"
+    description: "CLI tool for Upstage Document Parse API"
+    license: MIT
+    formats:
+      - deb
+      - rpm
+
+release:
+  github:
+    owner: serithemage
+    name: updoc
+  draft: false
+  prerelease: auto
+  name_template: "v{{.Version}}"
