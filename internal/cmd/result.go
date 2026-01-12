@@ -45,7 +45,7 @@ func runResult(cmd *cobra.Command, args []string) error {
 }
 
 func getResult(cmd *cobra.Command, apiKey, requestID string) error {
-	client := api.NewClient(apiKey)
+	client := api.NewClient(apiKey, api.WithBaseURL(GetEndpoint(cmd)))
 
 	// First check status
 	status, err := client.GetStatus(context.Background(), requestID)
@@ -71,7 +71,7 @@ func getResult(cmd *cobra.Command, apiKey, requestID string) error {
 }
 
 func waitAndGetResult(cmd *cobra.Command, apiKey, requestID string) error {
-	client := api.NewClient(apiKey)
+	client := api.NewClient(apiKey, api.WithBaseURL(GetEndpoint(cmd)))
 	timeout, _ := cmd.Flags().GetInt("timeout")
 
 	deadline := time.Now().Add(time.Duration(timeout) * time.Second)

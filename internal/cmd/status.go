@@ -43,7 +43,7 @@ func runStatus(cmd *cobra.Command, args []string) error {
 }
 
 func checkStatus(cmd *cobra.Command, apiKey, requestID string) error {
-	client := api.NewClient(apiKey)
+	client := api.NewClient(apiKey, api.WithBaseURL(GetEndpoint(cmd)))
 
 	resp, err := client.GetStatus(context.Background(), requestID)
 	if err != nil {
@@ -62,7 +62,7 @@ func checkStatus(cmd *cobra.Command, apiKey, requestID string) error {
 }
 
 func watchStatus(cmd *cobra.Command, apiKey, requestID string) error {
-	client := api.NewClient(apiKey)
+	client := api.NewClient(apiKey, api.WithBaseURL(GetEndpoint(cmd)))
 	interval, _ := cmd.Flags().GetInt("interval")
 
 	ticker := time.NewTicker(time.Duration(interval) * time.Second)

@@ -174,7 +174,7 @@ func processSingleFile(cmd *cobra.Command, apiKey string, filePath string) error
 
 	async, _ := cmd.Flags().GetBool("async")
 	if async {
-		return runParseAsync(apiKey, req)
+		return runParseAsync(cmd, apiKey, req)
 	}
 
 	return runParseSync(cmd, apiKey, req)
@@ -187,7 +187,7 @@ func processBatch(cmd *cobra.Command, apiKey string, files []string, outputDir s
 	}
 
 	ext := getExtensionForFormat(format)
-	client := api.NewClient(apiKey)
+	client := api.NewClient(apiKey, api.WithBaseURL(GetEndpoint(cmd)))
 
 	var successCount, failCount int
 	var failedFiles []string
@@ -308,7 +308,7 @@ func formatResult(cmd *cobra.Command, resp *api.ParseResponse) (string, error) {
 }
 
 func runParseSync(cmd *cobra.Command, apiKey string, req *api.ParseRequest) error {
-	client := api.NewClient(apiKey)
+	client := api.NewClient(apiKey, api.WithBaseURL(GetEndpoint(cmd)))
 
 	Verbosef("Parsing file: %s\n", req.FilePath)
 	Verbosef("Model: %s, Mode: %s, OCR: %s\n", req.Model, req.Mode, req.OCR)
@@ -325,8 +325,8 @@ func runParseSync(cmd *cobra.Command, apiKey string, req *api.ParseRequest) erro
 	return outputResult(cmd, resp)
 }
 
-func runParseAsync(apiKey string, req *api.ParseRequest) error {
-	client := api.NewClient(apiKey)
+func runParseAsync(cmd *cobra.Command, apiKey string, req *api.ParseRequest) error {
+	client := api.NewClient(apiKey, api.WithBaseURL(GetEndpoint(cmd)))
 
 	Verbosef("Submitting async parse request for: %s\n", req.FilePath)
 

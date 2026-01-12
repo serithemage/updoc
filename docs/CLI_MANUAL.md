@@ -159,6 +159,30 @@ updoc config set api-key up_xxxxxxxxxxxxxxxxxxxx
 updoc parse document.pdf --api-key up_xxxxxxxxxxxxxxxxxxxx
 ```
 
+### 프라이빗 엔드포인트 설정
+
+AWS Bedrock, 프라이빗 호스팅 등 커스텀 엔드포인트를 사용하는 경우 다음 방법으로 설정합니다.
+
+**방법 A: 환경 변수**
+
+```bash
+export UPSTAGE_API_ENDPOINT="https://your-private-endpoint.com/v1"
+```
+
+**방법 B: 설정 명령어**
+
+```bash
+updoc config set endpoint https://your-private-endpoint.com/v1
+```
+
+**방법 C: 명령어 옵션**
+
+```bash
+updoc parse document.pdf --endpoint https://your-private-endpoint.com/v1
+```
+
+우선순위: 명령어 옵션 > 환경 변수 > 설정 파일 > 기본값
+
 ### 설정 파일
 
 설정 파일 위치:
@@ -167,6 +191,7 @@ updoc parse document.pdf --api-key up_xxxxxxxxxxxxxxxxxxxx
 
 ```yaml
 api_key: "up_xxxxxxxxxxxxxxxxxxxx"
+endpoint: ""  # 기본값 사용 시 비워둠
 default_format: markdown
 default_mode: standard
 default_ocr: auto
@@ -233,6 +258,7 @@ updoc parse <file> [options]
 | `--quiet` | `-q` | 진행 메시지 숨김 | false |
 | `--verbose` | `-v` | 상세 로그 출력 | false |
 | `--api-key <key>` | | API 키 직접 지정 | 환경변수 |
+| `--endpoint <url>` | | API 엔드포인트 URL | 기본 엔드포인트 |
 
 #### 예제
 
@@ -395,6 +421,7 @@ updoc config <command> [key] [value]
 | 키 | 설명 | 값 |
 |----|------|-----|
 | `api-key` | API 키 | 문자열 |
+| `endpoint` | API 엔드포인트 URL | URL |
 | `default-format` | 기본 출력 형식 | html, markdown, text |
 | `default-mode` | 기본 파싱 모드 | standard, enhanced, auto |
 | `default-ocr` | 기본 OCR 설정 | auto, force |
@@ -748,6 +775,7 @@ Authorization: Bearer <UPSTAGE_API_KEY>
 | 변수 | 설명 |
 |------|------|
 | `UPSTAGE_API_KEY` | API 인증 키 |
+| `UPSTAGE_API_ENDPOINT` | API 엔드포인트 URL (프라이빗 호스팅용) |
 | `UPDOC_CONFIG_PATH` | 설정 파일 경로 (선택) |
 | `UPDOC_LOG_LEVEL` | 로그 레벨: debug, info, warn, error |
 

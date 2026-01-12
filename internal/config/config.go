@@ -12,14 +12,16 @@ import (
 
 // Default values
 const (
-	DefaultFormat = "markdown"
-	DefaultMode   = "standard"
-	DefaultOCR    = "auto"
+	DefaultFormat   = "markdown"
+	DefaultMode     = "standard"
+	DefaultOCR      = "auto"
+	DefaultEndpoint = "https://api.upstage.ai/v1"
 )
 
 // Environment variable names
 const (
 	EnvAPIKey     = "UPSTAGE_API_KEY"
+	EnvEndpoint   = "UPSTAGE_API_ENDPOINT"
 	EnvConfigPath = "UPDOC_CONFIG_PATH"
 	EnvLogLevel   = "UPDOC_LOG_LEVEL"
 )
@@ -42,6 +44,7 @@ var (
 // Config holds the application configuration
 type Config struct {
 	APIKey        string `yaml:"api_key"`
+	Endpoint      string `yaml:"endpoint"`
 	DefaultFormat string `yaml:"default_format"`
 	DefaultMode   string `yaml:"default_mode"`
 	DefaultOCR    string `yaml:"default_ocr"`
@@ -52,6 +55,7 @@ type Config struct {
 func New() *Config {
 	return &Config{
 		APIKey:        "",
+		Endpoint:      "",
 		DefaultFormat: DefaultFormat,
 		DefaultMode:   DefaultMode,
 		DefaultOCR:    DefaultOCR,
@@ -64,6 +68,8 @@ func (c *Config) Set(key, value string) error {
 	switch key {
 	case "api-key":
 		c.APIKey = value
+	case "endpoint":
+		c.Endpoint = value
 	case "default-format":
 		if !IsValidFormat(value) {
 			return ErrInvalidFormat
@@ -92,6 +98,8 @@ func (c *Config) Get(key string) (string, error) {
 	switch key {
 	case "api-key":
 		return c.APIKey, nil
+	case "endpoint":
+		return c.Endpoint, nil
 	case "default-format":
 		return c.DefaultFormat, nil
 	case "default-mode":
@@ -108,6 +116,7 @@ func (c *Config) Get(key string) (string, error) {
 // Reset resets the configuration to default values
 func (c *Config) Reset() {
 	c.APIKey = ""
+	c.Endpoint = ""
 	c.DefaultFormat = DefaultFormat
 	c.DefaultMode = DefaultMode
 	c.DefaultOCR = DefaultOCR
@@ -119,6 +128,17 @@ func (c *Config) LoadFromEnv() {
 	if apiKey := os.Getenv(EnvAPIKey); apiKey != "" {
 		c.APIKey = apiKey
 	}
+	if endpoint := os.Getenv(EnvEndpoint); endpoint != "" {
+		c.Endpoint = endpoint
+	}
+}
+
+// GetEndpoint returns the effective endpoint (custom or default)
+func (c *Config) GetEndpoint() string {
+	if c.Endpoint != "" {
+		return c.Endpoint
+	}
+	return DefaultEndpoint
 }
 
 // SaveTo saves the configuration to a file

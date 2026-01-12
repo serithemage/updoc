@@ -43,6 +43,7 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file path")
 	rootCmd.PersistentFlags().String("api-key", "", "Upstage API key")
+	rootCmd.PersistentFlags().String("endpoint", "", "API endpoint URL (for private hosting or AWS Bedrock)")
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
 	rootCmd.PersistentFlags().BoolVarP(&quiet, "quiet", "q", false, "suppress progress messages")
 }
@@ -85,6 +86,18 @@ func GetAPIKey(cmd *cobra.Command) string {
 	// 2. Check env (already loaded in config)
 	// 3. Check config file
 	return GetConfig().APIKey
+}
+
+// GetEndpoint returns the API endpoint from flags, env, or config
+func GetEndpoint(cmd *cobra.Command) string {
+	// 1. Check command flag
+	if endpoint, _ := cmd.Flags().GetString("endpoint"); endpoint != "" {
+		return endpoint
+	}
+
+	// 2. Check env (already loaded in config)
+	// 3. Check config file, or return default
+	return GetConfig().GetEndpoint()
 }
 
 // IsVerbose returns true if verbose mode is enabled

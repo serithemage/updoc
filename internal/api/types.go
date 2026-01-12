@@ -7,11 +7,12 @@ import (
 
 // API endpoints
 const (
-	BaseURL      = "https://api.upstage.ai/v1"
-	ParseURL     = BaseURL + "/document-digitization"
-	AsyncURL     = ParseURL + "/async"
-	DefaultModel = "document-parse"
+	DefaultBaseURL = "https://api.upstage.ai/v1"
+	DefaultModel   = "document-parse"
 )
+
+// BaseURL is kept for backward compatibility
+const BaseURL = DefaultBaseURL
 
 // Supported file extensions
 var SupportedExtensions = map[string]bool{

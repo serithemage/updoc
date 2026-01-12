@@ -53,6 +53,21 @@ export UPSTAGE_API_KEY="up_xxxxxxxxxxxxxxxxxxxx"
 updoc config set api-key up_xxxxxxxxxxxxxxxxxxxx
 ```
 
+### 프라이빗 엔드포인트 설정 (선택)
+
+AWS Bedrock이나 프라이빗 호스팅 환경을 사용하는 경우 커스텀 엔드포인트를 설정할 수 있습니다.
+
+```bash
+# 환경 변수로 설정
+export UPSTAGE_API_ENDPOINT="https://your-private-endpoint.com/v1"
+
+# 또는 설정 명령어 사용
+updoc config set endpoint https://your-private-endpoint.com/v1
+
+# 또는 명령어 옵션으로 지정
+updoc parse document.pdf --endpoint https://your-private-endpoint.com/v1
+```
+
 ### 2. 문서 파싱
 
 ```bash
