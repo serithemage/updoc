@@ -210,7 +210,7 @@ For detailed options and usage, see the [CLI Manual](docs/CLI_MANUAL.md).
 
 ## Contributing
 
-Thank you for contributing to the project.
+Thank you for contributing to the project! Please read our [Contributing Guide](CONTRIBUTING.md) for detailed information.
 
 ### Development Setup
 

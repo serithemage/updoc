@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/serithemage/updoc/blob/main/docs/CLI_MANUAL.md
+    about: Check the CLI manual for detailed usage instructions
+  - name: Upstage API Documentation
+    url: https://console.upstage.ai/docs/capabilities/document-parse
+    about: Official Upstage Document Parse API documentation
