@@ -271,6 +271,8 @@ updoc/
 └── Makefile
 ```
 
+For detailed architecture information, see the [Architecture Documentation](docs/ARCHITECTURE.md).
+
 ## License
 
 MIT License
@@ -278,6 +280,7 @@ MIT License
 ## References
 
 - [CLI Manual](docs/CLI_MANUAL.md)
+- [Architecture Documentation](docs/ARCHITECTURE.md)
 - [Upstage Document Parse Documentation](https://console.upstage.ai/docs/capabilities/document-parse)
 - [Upstage API Reference](https://console.upstage.ai/api-reference)
 - [Upstage Console](https://console.upstage.ai)
