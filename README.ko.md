@@ -3,7 +3,7 @@
 [![Go Version](https://img.shields.io/github/go-mod/go-version/serithemage/updoc)](https://go.dev/)
 [![CI](https://github.com/serithemage/updoc/actions/workflows/ci.yaml/badge.svg)](https://github.com/serithemage/updoc/actions/workflows/ci.yaml)
 [![Release](https://img.shields.io/github/v/release/serithemage/updoc)](https://github.com/serithemage/updoc/releases)
-[![License](https://img.shields.io/github/license/serithemage/updoc)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 [English](README.md) | [日本語](README.ja.md)
 
