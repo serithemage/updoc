@@ -1,5 +1,10 @@
 # updoc
 
+[![Go Version](https://img.shields.io/github/go-mod/go-version/serithemage/updoc)](https://go.dev/)
+[![CI](https://github.com/serithemage/updoc/actions/workflows/ci.yaml/badge.svg)](https://github.com/serithemage/updoc/actions/workflows/ci.yaml)
+[![Release](https://img.shields.io/github/v/release/serithemage/updoc)](https://github.com/serithemage/updoc/releases)
+[![License](https://img.shields.io/github/license/serithemage/updoc)](LICENSE)
+
 업스테이지(Upstage) Document Parse API를 CLI로 사용할 수 있는 도구입니다.
 
 ## 개요
