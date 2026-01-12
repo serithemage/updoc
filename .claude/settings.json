@@ -1,0 +1,31 @@
+{
+  "project": {
+    "name": "updoc",
+    "description": "CLI tool for Upstage Document Parse API"
+  },
+  "documentation": {
+    "defaultLanguage": "en",
+    "supportedLanguages": ["en", "ko", "ja"],
+    "files": {
+      "README.md": {
+        "translations": {
+          "ko": "README.ko.md",
+          "ja": "README.ja.md"
+        }
+      },
+      "docs/CLI_MANUAL.md": {
+        "translations": {
+          "ko": "docs/CLI_MANUAL.ko.md",
+          "ja": "docs/CLI_MANUAL.ja.md"
+        }
+      }
+    }
+  },
+  "hooks": {
+    "postDocEdit": {
+      "enabled": true,
+      "action": "suggest-translation",
+      "files": ["README.md", "docs/CLI_MANUAL.md"]
+    }
+  }
+}
