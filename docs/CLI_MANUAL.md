@@ -1,43 +1,45 @@
-# updoc CLI 매뉴얼
+# updoc CLI Manual
 
-## 목차
+[한국어](CLI_MANUAL.ko.md) | [日本語](CLI_MANUAL.ja.md)
 
-1. [소개](#소개)
-2. [설치](#설치)
-3. [설정](#설정)
-4. [명령어](#명령어)
-5. [사용 예제](#사용-예제)
-6. [문제 해결](#문제-해결)
-7. [API 레퍼런스](#api-레퍼런스)
+## Table of Contents
 
----
-
-## 소개
-
-`updoc`은 업스테이지(Upstage)의 Document Parse API를 커맨드라인에서 사용할 수 있게 해주는 CLI 도구입니다. Go 언어로 작성되어 단일 바이너리로 배포되며, 다양한 형식의 문서를 구조화된 텍스트(HTML, Markdown, Text)로 변환합니다.
-
-### 지원 기능
-
-| 기능 | 설명 |
-|------|------|
-| 문서 변환 | PDF, Office, HWP 등을 HTML/Markdown/Text로 변환 |
-| OCR | 스캔 문서 및 이미지에서 텍스트 추출 |
-| 구조 분석 | 제목, 단락, 표, 그림 등 요소별 분리 |
-| 레이아웃 인식 | 다단 구성, 복잡한 레이아웃 처리 |
-| 좌표 추출 | 각 요소의 페이지 내 위치 정보 제공 |
+1. [Introduction](#introduction)
+2. [Installation](#installation)
+3. [Configuration](#configuration)
+4. [Commands](#commands)
+5. [Usage Examples](#usage-examples)
+6. [Troubleshooting](#troubleshooting)
+7. [API Reference](#api-reference)
 
 ---
 
-## 설치
+## Introduction
 
-### 요구 사항
+`updoc` is a CLI tool that enables command-line access to Upstage's Document Parse API. Written in Go and distributed as a single binary, it converts various document formats into structured text (HTML, Markdown, Text).
 
-- 운영체제: macOS, Linux, Windows
-- 빌드 시: Go 1.21 이상
+### Supported Features
 
-### 바이너리 다운로드
+| Feature | Description |
+|---------|-------------|
+| Document Conversion | Convert PDF, Office, HWP to HTML/Markdown/Text |
+| OCR | Extract text from scanned documents and images |
+| Structure Analysis | Separate elements like headings, paragraphs, tables, figures |
+| Layout Recognition | Handle multi-column layouts and complex structures |
+| Coordinate Extraction | Provide position information for each element |
 
-[Releases](https://github.com/serithemage/updoc/releases) 페이지에서 OS에 맞는 바이너리를 다운로드합니다.
+---
+
+## Installation
+
+### Requirements
+
+- Operating System: macOS, Linux, Windows
+- For building: Go 1.21 or later
+
+### Binary Download
+
+Download the binary for your OS from the [Releases](https://github.com/serithemage/updoc/releases) page.
 
 #### macOS
 
@@ -73,7 +75,7 @@ sudo mv updoc /usr/local/bin/
 # PowerShell
 Invoke-WebRequest -Uri https://github.com/serithemage/updoc/releases/latest/download/updoc-windows-amd64.exe -OutFile updoc.exe
 
-# PATH에 추가하거나 원하는 위치로 이동
+# Add to PATH or move to desired location
 Move-Item updoc.exe C:\Users\$env:USERNAME\bin\
 ```
 
@@ -83,26 +85,26 @@ Move-Item updoc.exe C:\Users\$env:USERNAME\bin\
 brew install serithemage/tap/updoc
 ```
 
-### Go로 설치
+### Install with Go
 
 ```bash
 go install github.com/serithemage/updoc@latest
 ```
 
-### 소스에서 빌드
+### Build from Source
 
 ```bash
 git clone https://github.com/serithemage/updoc.git
 cd updoc
 
-# 빌드
+# Build
 go build -o updoc ./cmd/updoc
 
-# 설치 (선택)
+# Install (optional)
 sudo mv updoc /usr/local/bin/
 ```
 
-### 설치 확인
+### Verify Installation
 
 ```bash
 updoc version
@@ -111,22 +113,22 @@ updoc --help
 
 ---
 
-## 설정
+## Configuration
 
-### API 키 설정
+### API Key Setup
 
-Document Parse API를 사용하려면 Upstage API 키가 필요합니다.
+An Upstage API key is required to use the Document Parse API.
 
-#### 1. API 키 발급
+#### 1. Get API Key
 
-1. [Upstage Console](https://console.upstage.ai)에 로그인
-2. 새 프로젝트 생성 또는 기존 프로젝트 선택
-3. API Keys 메뉴에서 새 키 생성
-4. 생성된 키 복사
+1. Log in to [Upstage Console](https://console.upstage.ai)
+2. Create a new project or select an existing one
+3. Generate a new key in the API Keys menu
+4. Copy the generated key
 
-#### 2. 키 설정 방법
+#### 2. Key Configuration Methods
 
-**방법 A: 환경 변수 (권장)**
+**Method A: Environment Variable (Recommended)**
 
 ```bash
 # Linux/macOS
@@ -139,146 +141,146 @@ $env:UPSTAGE_API_KEY="up_xxxxxxxxxxxxxxxxxxxx"
 set UPSTAGE_API_KEY=up_xxxxxxxxxxxxxxxxxxxx
 ```
 
-쉘 설정 파일에 추가하여 영구 설정:
+Add to shell config file for permanent settings:
 
 ```bash
-# ~/.bashrc 또는 ~/.zshrc에 추가
+# Add to ~/.bashrc or ~/.zshrc
 echo 'export UPSTAGE_API_KEY="up_xxxxxxxxxxxxxxxxxxxx"' >> ~/.zshrc
 source ~/.zshrc
 ```
 
-**방법 B: 설정 명령어**
+**Method B: Config Command**
 
 ```bash
 updoc config set api-key up_xxxxxxxxxxxxxxxxxxxx
 ```
 
-**방법 C: 명령어 옵션**
+**Method C: Command Option**
 
 ```bash
 updoc parse document.pdf --api-key up_xxxxxxxxxxxxxxxxxxxx
 ```
 
-### 프라이빗 엔드포인트 설정
+### Private Endpoint Configuration
 
-AWS Bedrock, 프라이빗 호스팅 등 커스텀 엔드포인트를 사용하는 경우 다음 방법으로 설정합니다.
+For AWS Bedrock, private hosting, or custom endpoints, configure as follows:
 
-**방법 A: 환경 변수**
+**Method A: Environment Variable**
 
 ```bash
 export UPSTAGE_API_ENDPOINT="https://your-private-endpoint.com/v1"
 ```
 
-**방법 B: 설정 명령어**
+**Method B: Config Command**
 
 ```bash
 updoc config set endpoint https://your-private-endpoint.com/v1
 ```
 
-**방법 C: 명령어 옵션**
+**Method C: Command Option**
 
 ```bash
 updoc parse document.pdf --endpoint https://your-private-endpoint.com/v1
 ```
 
-우선순위: 명령어 옵션 > 환경 변수 > 설정 파일 > 기본값
+Priority: Command option > Environment variable > Config file > Default
 
-### 설정 파일
+### Config File
 
-설정 파일 위치:
+Config file locations:
 - Linux/macOS: `~/.config/updoc/config.yaml`
 - Windows: `%APPDATA%\updoc\config.yaml`
 
 ```yaml
 api_key: "up_xxxxxxxxxxxxxxxxxxxx"
-endpoint: ""  # 기본값 사용 시 비워둠
+endpoint: ""  # Leave empty for default
 default_format: markdown
 default_mode: standard
 default_ocr: auto
 output_dir: "./output"
 ```
 
-### 설정 관리
+### Configuration Management
 
 ```bash
-# 현재 설정 보기
+# View current settings
 updoc config list
 
-# 설정 값 변경
+# Change settings
 updoc config set default-format html
 updoc config set default-mode enhanced
 
-# 설정 값 조회
+# Query settings
 updoc config get default-format
 
-# 설정 초기화
+# Reset settings
 updoc config reset
 
-# 설정 파일 위치 확인
+# Show config file path
 updoc config path
 ```
 
 ---
 
-## 명령어
+## Commands
 
 ### updoc parse
 
-문서를 파싱하여 구조화된 텍스트로 변환합니다.
+Parse documents and convert to structured text.
 
 ```
 updoc parse <file> [options]
 ```
 
-#### 인자
+#### Arguments
 
-| 인자 | 설명 |
-|------|------|
-| `<file>` | 파싱할 문서 파일 경로 (필수) |
+| Argument | Description |
+|----------|-------------|
+| `<file>` | Path to document file (required) |
 
-#### 옵션
+#### Options
 
-| 옵션 | 단축 | 설명 | 기본값 |
-|------|------|------|--------|
-| `--format <type>` | `-f` | 출력 형식: html, markdown, text | markdown |
-| `--output <path>` | `-o` | 출력 파일 경로 | stdout |
-| `--mode <mode>` | `-m` | 파싱 모드: standard, enhanced, auto | standard |
-| `--model <name>` | | 모델 지정 | document-parse |
-| `--ocr <type>` | | OCR 설정: auto, force | auto |
-| `--chart-recognition` | | 차트를 표로 변환 | true |
-| `--no-chart-recognition` | | 차트 변환 비활성화 | |
-| `--merge-tables` | | 다중 페이지 테이블 병합 | false |
-| `--coordinates` | | 좌표 정보 포함 | true |
-| `--no-coordinates` | | 좌표 정보 제외 | |
-| `--elements-only` | `-e` | 요소별 결과만 출력 | false |
-| `--json` | `-j` | JSON 형식으로 출력 | false |
-| `--async` | `-a` | 비동기 처리 사용 | false |
-| `--output-dir` | `-d` | 배치 처리 시 출력 디렉토리 | . |
-| `--recursive` | `-r` | 디렉토리 재귀 탐색 | false |
-| `--quiet` | `-q` | 진행 메시지 숨김 | false |
-| `--verbose` | `-v` | 상세 로그 출력 | false |
-| `--api-key <key>` | | API 키 직접 지정 | 환경변수 |
-| `--endpoint <url>` | | API 엔드포인트 URL | 기본 엔드포인트 |
+| Option | Short | Description | Default |
+|--------|-------|-------------|---------|
+| `--format <type>` | `-f` | Output format: html, markdown, text | markdown |
+| `--output <path>` | `-o` | Output file path | stdout |
+| `--mode <mode>` | `-m` | Parsing mode: standard, enhanced, auto | standard |
+| `--model <name>` | | Model name | document-parse |
+| `--ocr <type>` | | OCR setting: auto, force | auto |
+| `--chart-recognition` | | Convert charts to tables | true |
+| `--no-chart-recognition` | | Disable chart conversion | |
+| `--merge-tables` | | Merge multi-page tables | false |
+| `--coordinates` | | Include coordinate info | true |
+| `--no-coordinates` | | Exclude coordinate info | |
+| `--elements-only` | `-e` | Output only elements | false |
+| `--json` | `-j` | Output as JSON | false |
+| `--async` | `-a` | Use async processing | false |
+| `--output-dir` | `-d` | Output directory for batch | . |
+| `--recursive` | `-r` | Recursive directory traversal | false |
+| `--quiet` | `-q` | Suppress progress messages | false |
+| `--verbose` | `-v` | Verbose output | false |
+| `--api-key <key>` | | Specify API key | env var |
+| `--endpoint <url>` | | API endpoint URL | default endpoint |
 
-#### 예제
+#### Examples
 
 ```bash
-# 기본 사용
+# Basic usage
 updoc parse report.pdf
 
-# HTML로 변환하여 파일 저장
+# Convert to HTML and save
 updoc parse report.pdf -f html -o report.html
 
-# Enhanced 모드로 복잡한 문서 처리
+# Process complex documents with enhanced mode
 updoc parse complex-form.pdf --mode enhanced
 
-# 스캔 문서 강제 OCR
+# Force OCR on scanned documents
 updoc parse scanned.pdf --ocr force
 
-# JSON 형식 출력
+# JSON output
 updoc parse document.pdf --json -o result.json
 
-# 배치 처리
+# Batch processing
 updoc parse ./documents/*.pdf --output-dir ./results/
 ```
 
@@ -286,40 +288,40 @@ updoc parse ./documents/*.pdf --output-dir ./results/
 
 ### updoc status
 
-비동기 요청의 상태를 확인합니다.
+Check the status of async requests.
 
 ```
 updoc status <request-id> [options]
 ```
 
-#### 인자
+#### Arguments
 
-| 인자 | 설명 |
-|------|------|
-| `<request-id>` | 비동기 요청 ID (필수) |
+| Argument | Description |
+|----------|-------------|
+| `<request-id>` | Async request ID (required) |
 
-#### 옵션
+#### Options
 
-| 옵션 | 단축 | 설명 | 기본값 |
-|------|------|------|--------|
-| `--json` | `-j` | JSON 형식으로 출력 | false |
-| `--watch` | `-w` | 실시간 상태 모니터링 | false |
-| `--interval` | `-i` | 모니터링 간격 (초) | 5 |
+| Option | Short | Description | Default |
+|--------|-------|-------------|---------|
+| `--json` | `-j` | Output as JSON | false |
+| `--watch` | `-w` | Real-time status monitoring | false |
+| `--interval` | `-i` | Monitoring interval (seconds) | 5 |
 
-#### 예제
+#### Examples
 
 ```bash
-# 상태 확인
+# Check status
 updoc status abc123def456
 
-# JSON 형식으로 출력
+# JSON output
 updoc status abc123def456 --json
 
-# 실시간 모니터링
+# Real-time monitoring
 updoc status abc123def456 --watch
 ```
 
-#### 출력 예시
+#### Output Example
 
 ```
 Request ID: abc123def456
@@ -333,38 +335,38 @@ Elapsed time: 1m 23s
 
 ### updoc result
 
-비동기 요청의 결과를 가져옵니다.
+Get the result of async requests.
 
 ```
 updoc result <request-id> [options]
 ```
 
-#### 인자
+#### Arguments
 
-| 인자 | 설명 |
-|------|------|
-| `<request-id>` | 비동기 요청 ID (필수) |
+| Argument | Description |
+|----------|-------------|
+| `<request-id>` | Async request ID (required) |
 
-#### 옵션
+#### Options
 
-| 옵션 | 단축 | 설명 | 기본값 |
-|------|------|------|--------|
-| `--output <path>` | `-o` | 출력 파일 경로 | stdout |
-| `--format <type>` | `-f` | 출력 형식 | markdown |
-| `--wait` | `-w` | 완료까지 대기 | false |
-| `--timeout <sec>` | `-t` | 대기 타임아웃(초) | 300 |
-| `--json` | `-j` | JSON 형식으로 출력 | false |
+| Option | Short | Description | Default |
+|--------|-------|-------------|---------|
+| `--output <path>` | `-o` | Output file path | stdout |
+| `--format <type>` | `-f` | Output format | markdown |
+| `--wait` | `-w` | Wait for completion | false |
+| `--timeout <sec>` | `-t` | Wait timeout (seconds) | 300 |
+| `--json` | `-j` | Output as JSON | false |
 
-#### 예제
+#### Examples
 
 ```bash
-# 결과 가져오기
+# Get result
 updoc result abc123def456 -o output.md
 
-# 완료까지 대기 후 결과 가져오기
+# Wait for completion and get result
 updoc result abc123def456 --wait -o output.md
 
-# 타임아웃 설정
+# With timeout
 updoc result abc123def456 --wait --timeout 600 -o output.md
 ```
 
@@ -372,75 +374,75 @@ updoc result abc123def456 --wait --timeout 600 -o output.md
 
 ### updoc models
 
-사용 가능한 모델 목록을 표시합니다.
+Display available models.
 
 ```
 updoc models [options]
 ```
 
-#### 옵션
+#### Options
 
-| 옵션 | 단축 | 설명 | 기본값 |
-|------|------|------|--------|
-| `--json` | `-j` | JSON 형식으로 출력 | false |
+| Option | Short | Description | Default |
+|--------|-------|-------------|---------|
+| `--json` | `-j` | Output as JSON | false |
 
-#### 출력 예시
+#### Output Example
 
 ```
 Available Models:
 
-  document-parse          기본 모델 (권장, alias)
-  document-parse-250618   특정 버전 (2025-06-18)
-  document-parse-nightly  최신 테스트 버전
+  document-parse          Default model (recommended, alias)
+  document-parse-250618   Specific version (2025-06-18)
+  document-parse-nightly  Latest test version
 
-Tip: 'document-parse' alias를 사용하면 자동으로 최신 안정 버전이 적용됩니다.
+Tip: Using 'document-parse' alias automatically applies the latest stable version.
 ```
 
 ---
 
 ### updoc config
 
-설정을 관리합니다.
+Manage configuration.
 
 ```
 updoc config <command> [key] [value]
 ```
 
-#### 하위 명령어
+#### Subcommands
 
-| 명령어 | 설명 |
-|--------|------|
-| `list` | 모든 설정 표시 |
-| `get <key>` | 특정 설정 조회 |
-| `set <key> <value>` | 설정 변경 |
-| `reset` | 설정 초기화 |
-| `path` | 설정 파일 경로 표시 |
+| Command | Description |
+|---------|-------------|
+| `list` | Show all settings |
+| `get <key>` | Query specific setting |
+| `set <key> <value>` | Change setting |
+| `reset` | Reset settings |
+| `path` | Show config file path |
 
-#### 설정 키
+#### Config Keys
 
-| 키 | 설명 | 값 |
-|----|------|-----|
-| `api-key` | API 키 | 문자열 |
-| `endpoint` | API 엔드포인트 URL | URL |
-| `default-format` | 기본 출력 형식 | html, markdown, text |
-| `default-mode` | 기본 파싱 모드 | standard, enhanced, auto |
-| `default-ocr` | 기본 OCR 설정 | auto, force |
-| `output-dir` | 기본 출력 디렉토리 | 경로 |
+| Key | Description | Values |
+|-----|-------------|--------|
+| `api-key` | API key | string |
+| `endpoint` | API endpoint URL | URL |
+| `default-format` | Default output format | html, markdown, text |
+| `default-mode` | Default parsing mode | standard, enhanced, auto |
+| `default-ocr` | Default OCR setting | auto, force |
+| `output-dir` | Default output directory | path |
 
-#### 예제
+#### Examples
 
 ```bash
-# 모든 설정 보기
+# View all settings
 updoc config list
 
-# 특정 설정 조회
+# Query specific setting
 updoc config get api-key
 
-# 설정 변경
+# Change settings
 updoc config set default-format html
 updoc config set default-mode enhanced
 
-# 설정 초기화
+# Reset settings
 updoc config reset
 ```
 
@@ -448,20 +450,20 @@ updoc config reset
 
 ### updoc version
 
-버전 정보를 표시합니다.
+Display version information.
 
 ```
 updoc version [options]
 ```
 
-#### 옵션
+#### Options
 
-| 옵션 | 단축 | 설명 |
-|------|------|------|
-| `--short` | `-s` | 버전 번호만 출력 |
-| `--json` | `-j` | JSON 형식으로 출력 |
+| Option | Short | Description |
+|--------|-------|-------------|
+| `--short` | `-s` | Output version number only |
+| `--json` | `-j` | Output as JSON |
 
-#### 출력 예시
+#### Output Example
 
 ```
 updoc version 1.0.0
@@ -473,32 +475,32 @@ updoc version 1.0.0
 
 ---
 
-## 사용 예제
+## Usage Examples
 
-### 기본 워크플로우
+### Basic Workflow
 
 ```bash
-# 1. API 키 설정
+# 1. Set API key
 export UPSTAGE_API_KEY="up_xxxxxxxxxxxxxxxxxxxx"
 
-# 2. PDF를 Markdown으로 변환
+# 2. Convert PDF to Markdown
 updoc parse report.pdf -o report.md
 
-# 3. 변환 결과 확인
+# 3. View result
 cat report.md
 ```
 
-### 스캔 문서 처리
+### Processing Scanned Documents
 
 ```bash
-# 스캔된 PDF를 OCR 처리
+# OCR process scanned PDF
 updoc parse scanned-document.pdf --ocr force --mode enhanced -o output.md
 ```
 
-### 복잡한 레이아웃 문서
+### Complex Layout Documents
 
 ```bash
-# 표, 차트가 많은 문서를 enhanced 모드로 처리
+# Process document with many tables and charts in enhanced mode
 updoc parse financial-report.pdf \
   --mode enhanced \
   --chart-recognition \
@@ -507,70 +509,70 @@ updoc parse financial-report.pdf \
   -f html
 ```
 
-### 요소별 분석
+### Element-wise Analysis
 
 ```bash
-# 문서를 요소별로 분리하여 JSON 출력
+# Parse document into elements and output JSON
 updoc parse document.pdf --elements-only --json -o elements.json
 
-# jq로 표만 추출
+# Extract only tables with jq
 cat elements.json | jq '.elements[] | select(.category == "table")'
 
-# jq로 제목만 추출
+# Extract only headings with jq
 cat elements.json | jq '.elements[] | select(.category | startswith("heading"))'
 ```
 
-### 대용량 문서 처리
+### Large Document Processing
 
 ```bash
-# 비동기 요청 시작
+# Start async request
 updoc parse large-document.pdf --async
-# 출력: Request ID: req_abc123
+# Output: Request ID: req_abc123
 
-# 상태 실시간 모니터링
+# Real-time status monitoring
 updoc status req_abc123 --watch
 
-# 완료 후 결과 가져오기
+# Get result after completion
 updoc result req_abc123 -o result.md
 
-# 또는 완료까지 대기
+# Or wait for completion
 updoc result req_abc123 --wait --timeout 600 -o result.md
 ```
 
-### 배치 처리
+### Batch Processing
 
 ```bash
-# 현재 디렉토리의 모든 PDF 처리
+# Process all PDFs in current directory
 updoc parse *.pdf --output-dir ./results/
 
-# 특정 디렉토리의 문서 재귀 처리
+# Recursively process documents in directory
 updoc parse ./documents/ --output-dir ./results/ --recursive
 
-# 셸 스크립트로 세부 제어
+# Fine-grained control with shell script
 for file in *.pdf; do
   echo "Processing: $file"
   updoc parse "$file" -o "${file%.pdf}.md" --quiet
 done
 ```
 
-### 파이프라인 활용
+### Pipeline Usage
 
 ```bash
-# 변환 결과를 다른 도구로 전달
+# Pipe conversion results to other tools
 updoc parse document.pdf | grep -i "important"
 
-# 여러 형식으로 동시 출력
+# Output to multiple formats simultaneously
 updoc parse document.pdf --json | tee result.json | jq -r '.content.markdown' > result.md
 
-# 특정 요소만 추출하여 처리
+# Extract and process specific elements
 updoc parse document.pdf --json | jq -r '.elements[] | select(.category == "table") | .content.markdown'
 ```
 
-### 자동화 스크립트 예제
+### Automation Script Example
 
 ```bash
 #!/bin/bash
-# batch_convert.sh - 문서 일괄 변환 스크립트
+# batch_convert.sh - Batch document conversion script
 
 INPUT_DIR="${1:-.}"
 OUTPUT_DIR="${2:-./output}"
@@ -597,126 +599,126 @@ echo "Done!"
 
 ---
 
-## 문제 해결
+## Troubleshooting
 
-### 자주 발생하는 오류
+### Common Errors
 
-#### API 키 오류
+#### API Key Error
 
 ```
 Error: Invalid API key
 ```
 
-해결:
-1. API 키가 올바른지 확인
-2. 환경 변수가 설정되어 있는지 확인: `echo $UPSTAGE_API_KEY`
-3. 키 앞뒤 공백 제거
-4. 설정 확인: `updoc config get api-key`
+Solutions:
+1. Verify API key is correct
+2. Check if environment variable is set: `echo $UPSTAGE_API_KEY`
+3. Remove whitespace around key
+4. Check settings: `updoc config get api-key`
 
-#### 파일 형식 오류
+#### File Format Error
 
 ```
 Error: Unsupported file format: .xyz
 ```
 
-지원 형식:
-- 문서: PDF, DOCX, PPTX, XLSX, HWP
-- 이미지: JPEG, PNG, BMP, TIFF, HEIC
+Supported formats:
+- Documents: PDF, DOCX, PPTX, XLSX, HWP
+- Images: JPEG, PNG, BMP, TIFF, HEIC
 
-#### 페이지 수 초과
+#### Page Limit Exceeded
 
 ```
 Error: Document exceeds maximum page limit (100 pages for sync API)
 ```
 
-동기 API는 최대 100페이지, 비동기 API는 최대 1,000페이지 지원.
-대용량 문서는 `--async` 옵션 사용:
+Sync API supports max 100 pages, async API supports max 1,000 pages.
+Use `--async` option for large documents:
 
 ```bash
 updoc parse large-document.pdf --async
 ```
 
-#### 타임아웃
+#### Timeout
 
 ```
 Error: Request timeout after 120s
 ```
 
-해결:
-- 비동기 모드 사용: `--async`
-- 네트워크 상태 확인
-- 파일 크기 확인
+Solutions:
+- Use async mode: `--async`
+- Check network status
+- Check file size
 
-#### 파일 접근 오류
+#### File Access Error
 
 ```
 Error: Cannot read file: permission denied
 ```
 
-해결:
+Solution:
 ```bash
-# 파일 권한 확인
+# Check file permissions
 ls -la document.pdf
 
-# 권한 수정 (필요시)
+# Modify permissions (if needed)
 chmod 644 document.pdf
 ```
 
-### 디버깅
+### Debugging
 
 ```bash
-# 상세 로그 출력
+# Verbose output
 updoc parse document.pdf --verbose
 
-# 요청/응답 확인
+# Check request/response
 updoc parse document.pdf --verbose 2>&1 | tee debug.log
 
-# 설정 상태 확인
+# Check configuration
 updoc config list
 ```
 
-### 로그 레벨
+### Log Levels
 
-`--verbose` 플래그를 사용하면 다음 정보가 출력됩니다:
-- API 요청 URL 및 헤더
-- 요청 파라미터
-- 응답 상태 코드
-- 처리 시간
+Using the `--verbose` flag outputs the following information:
+- API request URL and headers
+- Request parameters
+- Response status code
+- Processing time
 
 ---
 
-## API 레퍼런스
+## API Reference
 
-### 엔드포인트
+### Endpoints
 
-| 용도 | URL |
-|------|-----|
-| 동기 파싱 | `POST https://api.upstage.ai/v1/document-digitization` |
-| 비동기 파싱 | `POST https://api.upstage.ai/v1/document-digitization/async` |
-| 상태 확인 | `GET https://api.upstage.ai/v1/document-digitization/async/{id}` |
+| Purpose | URL |
+|---------|-----|
+| Sync parsing | `POST https://api.upstage.ai/v1/document-digitization` |
+| Async parsing | `POST https://api.upstage.ai/v1/document-digitization/async` |
+| Status check | `GET https://api.upstage.ai/v1/document-digitization/async/{id}` |
 
-### 인증
+### Authentication
 
 ```
 Authorization: Bearer <UPSTAGE_API_KEY>
 ```
 
-### 요청 형식
+### Request Format
 
 `Content-Type: multipart/form-data`
 
-| 필드 | 타입 | 필수 | 설명 |
-|------|------|------|------|
-| `model` | string | O | 모델명 (document-parse) |
-| `document` | file | O | 문서 파일 |
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `model` | string | Yes | Model name (document-parse) |
+| `document` | file | Yes | Document file |
 | `mode` | string | | standard, enhanced, auto |
 | `ocr` | string | | auto, force |
-| `output_formats` | string | | 출력 형식 |
-| `chart_recognition` | boolean | | 차트 변환 |
-| `merge_multipage_tables` | boolean | | 테이블 병합 |
-| `coordinates` | boolean | | 좌표 포함 |
+| `output_formats` | string | | Output formats |
+| `chart_recognition` | boolean | | Chart conversion |
+| `merge_multipage_tables` | boolean | | Table merging |
+| `coordinates` | boolean | | Include coordinates |
 
-### 응답 구조
+### Response Structure
 
 ```json
 {
@@ -751,55 +753,55 @@ Authorization: Bearer <UPSTAGE_API_KEY>
 }
 ```
 
-### 요소 카테고리
+### Element Categories
 
-| 카테고리 | 설명 |
-|----------|------|
-| `heading1` ~ `heading6` | 제목 레벨 |
-| `paragraph` | 단락 |
-| `table` | 표 |
-| `figure` | 그림 |
-| `chart` | 차트 |
-| `equation` | 수식 |
-| `list_item` | 리스트 항목 |
-| `header` | 머리말 |
-| `footer` | 꼬리말 |
-| `caption` | 캡션 |
+| Category | Description |
+|----------|-------------|
+| `heading1` ~ `heading6` | Heading levels |
+| `paragraph` | Paragraph |
+| `table` | Table |
+| `figure` | Figure |
+| `chart` | Chart |
+| `equation` | Equation |
+| `list_item` | List item |
+| `header` | Header |
+| `footer` | Footer |
+| `caption` | Caption |
 
 ---
 
-## 부록
+## Appendix
 
-### 환경 변수
+### Environment Variables
 
-| 변수 | 설명 |
-|------|------|
-| `UPSTAGE_API_KEY` | API 인증 키 |
-| `UPSTAGE_API_ENDPOINT` | API 엔드포인트 URL (프라이빗 호스팅용) |
-| `UPDOC_CONFIG_PATH` | 설정 파일 경로 (선택) |
-| `UPDOC_LOG_LEVEL` | 로그 레벨: debug, info, warn, error |
+| Variable | Description |
+|----------|-------------|
+| `UPSTAGE_API_KEY` | API authentication key |
+| `UPSTAGE_API_ENDPOINT` | API endpoint URL (for private hosting) |
+| `UPDOC_CONFIG_PATH` | Config file path (optional) |
+| `UPDOC_LOG_LEVEL` | Log level: debug, info, warn, error |
 
-### 종료 코드
+### Exit Codes
 
-| 코드 | 의미 |
-|------|------|
-| 0 | 성공 |
-| 1 | 일반 오류 |
-| 2 | 인자 오류 |
-| 3 | API 오류 |
-| 4 | 파일 I/O 오류 |
-| 5 | 인증 오류 |
+| Code | Meaning |
+|------|---------|
+| 0 | Success |
+| 1 | General error |
+| 2 | Argument error |
+| 3 | API error |
+| 4 | File I/O error |
+| 5 | Authentication error |
 
-### 관련 링크
+### Related Links
 
 - [Upstage Console](https://console.upstage.ai)
-- [Document Parse 공식 문서](https://console.upstage.ai/docs/capabilities/document-parse)
+- [Document Parse Documentation](https://console.upstage.ai/docs/capabilities/document-parse)
 - [API Reference](https://console.upstage.ai/api-reference)
-- [Upstage 블로그](https://upstage.ai/blog)
-- [GitHub 저장소](https://github.com/serithemage/updoc)
+- [Upstage Blog](https://upstage.ai/blog)
+- [GitHub Repository](https://github.com/serithemage/updoc)
 
-### 버전 히스토리
+### Version History
 
-| 버전 | 날짜 | 변경 사항 |
-|------|------|-----------|
-| 1.0.0 | - | 최초 릴리스 |
+| Version | Date | Changes |
+|---------|------|---------|
+| 1.0.0 | - | Initial release |
