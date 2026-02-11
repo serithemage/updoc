@@ -80,6 +80,8 @@ updoc/
 └── Makefile             # Build automation
 ```
 
+For detailed architecture information, component interactions, and design decisions, see the [Architecture Documentation](docs/ARCHITECTURE.md).
+
 ## How to Contribute
 
 ### Reporting Bugs
@@ -289,6 +291,7 @@ func TestParseRequest_Validate(t *testing.T) {
 |------|---------|
 | `README.md` | Project overview and quick start |
 | `docs/CLI_MANUAL.md` | Detailed CLI reference |
+| `docs/ARCHITECTURE.md` | Architecture and design documentation |
 | `CONTRIBUTING.md` | Contribution guidelines |
 
 ### Multilingual Support
